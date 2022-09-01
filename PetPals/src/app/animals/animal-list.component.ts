@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { IAnimal } from "./animal";
+import { AnimalService } from "./animal.service";
 
  // SELECTOR CAN BE USED VIA HTMLTAG <pp-animals>
 @Component({
@@ -9,6 +10,12 @@ import { IAnimal } from "./animal";
 })
 export class AnimalListComponent implements OnInit {
     // OnInit: Lifecycle hook (interface)
+    // private _animalService;
+    // constructor(animalService : AnimalService) {
+    //   this._animalService = animalService;
+    // }
+
+    constructor(private animalService: AnimalService) {}
     
     pageTitle: string = 'Animals for Rent';
     imageWidth: number = 100;
@@ -27,64 +34,15 @@ export class AnimalListComponent implements OnInit {
     }
 
     filteredAnimals: IAnimal[] = [];
-    animals: IAnimal[] = [
-        {
-            "animalId": 1,
-            "animalName": "Anna",
-            "category": "Dog",
-            "description": "This is a short description.",
-            "price": 1995,
-            "starRating": 4.1,
-            "imageUrl": "assets/images/AnnaDog.jpg"
-          },
-          {
-            "animalId": 2,
-            "animalName": "Bert",
-            "category": "Cat",
-            "description": "This is a short description.",
-            "price": 199,
-            "starRating": 3.2,
-            "imageUrl": "assets/images/BertCat.jpg"
-          },
-          {
-            "animalId": 3,
-            "animalName": "Caesar",
-            "category": "Horse",
-            "description": "This is a short description.",
-            "price": 1195,
-            "starRating": 1,
-            "imageUrl": "assets/images/CaesarHorse.jpg"
-          },
-          {
-            "animalId": 4,
-            "animalName": "David",
-            "category": "Fish",
-            "description": "This is a short description.",
-            "price": 49,
-            "starRating": 3.6,
-            "imageUrl": "assets/images/DavidFish.jpg"
-          },
-          {
-            "animalId": 5,
-            "animalName": "Emma",
-            "category": "Turtle",
-            "description": "This is a short description.",
-            "price": 300,
-            "starRating": 2.9,
-            "imageUrl": "assets/images/EmmaTurtle.jpg"
-          }
-
-
-
-
-    ];
+    animals: IAnimal[] = [];
 
     toggleImage(): void {
         this.showImage = !this.showImage;
     }
 
     ngOnInit(): void {
-        this.listFilter = '';
+      this.animals = this.animalService.getAnimals();
+      this.filteredAnimals = this.animals;
     }
 
     onRatingClicked(message: string) : void {
