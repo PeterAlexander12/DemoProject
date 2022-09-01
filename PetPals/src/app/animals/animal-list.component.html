@@ -19,7 +19,7 @@
         <thead>
           <tr>
             <th>
-              <button class='btn btn-primary'
+              <button class='btn btn-dark'
               (click)='toggleImage()'>
               {{showImage ? 'Hide' : 'Show'}} Image 
                  
@@ -46,7 +46,14 @@
                 <td>{{animal.animalName}}</td>
                 <td>{{animal.description}}</td>
                 <td>{{animal.price | currency:"SEK":"symbol":"1.2-2" }}</td>
-                <td>{{animal.starRating}}</td>
+                <td>
+                    <pp-star [rating]='animal.starRating'
+                     (ratingClicked)='onRatingClicked($event)'>
+                    </pp-star>
+                    <!-- IN STARCOMPONENT: 
+                        @Output() ratingClicked: EventEmitter<string> = 
+                        new EventEmitter<string>(); -->
+                </td>
             </tr>
          
         </tbody>

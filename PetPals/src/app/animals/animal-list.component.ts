@@ -34,7 +34,7 @@ export class AnimalListComponent implements OnInit {
             "category": "Dog",
             "description": "This is a short description.",
             "price": 1995,
-            "starRating": 3.2,
+            "starRating": 4.1,
             "imageUrl": "assets/images/AnnaDog.jpg"
           },
           {
@@ -52,7 +52,7 @@ export class AnimalListComponent implements OnInit {
             "category": "Horse",
             "description": "This is a short description.",
             "price": 1195,
-            "starRating": 3.2,
+            "starRating": 1,
             "imageUrl": "assets/images/CaesarHorse.jpg"
           },
           {
@@ -61,7 +61,7 @@ export class AnimalListComponent implements OnInit {
             "category": "Fish",
             "description": "This is a short description.",
             "price": 49,
-            "starRating": 3.2,
+            "starRating": 3.6,
             "imageUrl": "assets/images/DavidFish.jpg"
           },
           {
@@ -70,7 +70,7 @@ export class AnimalListComponent implements OnInit {
             "category": "Turtle",
             "description": "This is a short description.",
             "price": 300,
-            "starRating": 3.2,
+            "starRating": 2.9,
             "imageUrl": "assets/images/EmmaTurtle.jpg"
           }
 
@@ -84,7 +84,11 @@ export class AnimalListComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.listFilter = 'Horse';
+        this.listFilter = '';
+    }
+
+    onRatingClicked(message: string) : void {
+        this.pageTitle = 'Animal List: ' + message;
     }
 
     // FILTER BY ANIMAL TYPE OR NAME
