@@ -4,7 +4,7 @@ import { Component } from "@angular/core";
   selector: 'pp-root',   // pp-prefix for PetPals
   template: `
   <div>
-    <h1>{{pageTitle}}</h1>
+    <h1>{{pageTitle | uppercase}}</h1>
     <pp-animals></pp-animals>
   </div>`
 })
