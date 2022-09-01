@@ -1,3 +1,4 @@
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -14,8 +15,8 @@ import { StarComponent } from './shared/star.component';
   ],
   imports: [  // THE MODULES TO IMPORT TO THIS MODULE
     BrowserModule, // Exposes NgIf, NgFor
-    FormsModule   // Enables [(ngModel)]
-
+    FormsModule,   // Enables [(ngModel)]
+    HttpClientModule
   ],
   bootstrap: [AppComponent] // STARTUP COMPONENT
 })
