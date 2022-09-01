@@ -43,7 +43,10 @@
                     [style.margin.px]='imageMargin'>
                 </td>
                 <td>{{animal.category}}</td>
-                <td>{{animal.animalName}}</td>
+                <td>
+                    <a [routerLink]="['/animals', animal.animalId]">
+                         {{animal.animalName}}</a>
+                </td>
                 <td>{{animal.description}}</td>
                 <td>{{animal.price | currency:"SEK":"symbol":"1.2-2" }}</td>
                 <td>

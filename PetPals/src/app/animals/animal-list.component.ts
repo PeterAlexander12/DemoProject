@@ -5,9 +5,7 @@ import { IAnimal } from "./animal";
 import { AnimalService } from "./animal.service";
 
 
- // SELECTOR CAN BE USED VIA HTMLTAG <pp-animals>
 @Component({
-    selector: 'pp-animals',    
     templateUrl: './animal-list.component.html',
     styleUrls: ['./animal-list.component.css']
 })
