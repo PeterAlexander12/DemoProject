@@ -21,7 +21,7 @@ export class AnimalListComponent implements OnInit, OnDestroy {
     pageTitle: string = 'Animals for Rent';
     imageWidth: number = 100;
     imageMargin: number = 2;
-    showImage: boolean = false;
+    showImages: boolean = false;
     errorMessage: string = '';
     sub!: Subscription;
     
@@ -40,7 +40,7 @@ export class AnimalListComponent implements OnInit, OnDestroy {
     animals: IAnimal[] = [];
 
     toggleImage(): void {
-        this.showImage = !this.showImage;
+        this.showImages = !this.showImages;
     }
 
     // SERVICE SENDS GET-REQUEST TO API WHEN WE START SUBSCRIBING

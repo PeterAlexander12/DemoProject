@@ -19,9 +19,14 @@ export class AnimalService {
             tap(data => console.log('All: ', JSON.stringify(data))),
             catchError(this.handleError )
         );
-        
-
     }
+
+    getAnimal(id : number): Observable<IAnimal> {
+      return this.http.get<IAnimal>(this.baseUrl + `/animal/${id}`).pipe(
+          tap(data => console.log('All: ', JSON.stringify(data))),
+          catchError(this.handleError )
+      );
+  }
 
     private handleError(err: HttpErrorResponse): Observable<never> {
         

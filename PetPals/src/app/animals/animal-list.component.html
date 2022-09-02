@@ -21,14 +21,14 @@
             <th>
               <button class='btn btn-dark'
               (click)='toggleImage()'>
-              {{showImage ? 'Hide' : 'Show'}} Image 
+              {{showImages ? 'Hide' : 'Show'}} Image 
                  
               </button>
             </th>
-            <th>Animal</th>
-            <th>Name</th>
+            <th>Pet Name</th>
+            <th>Animal Type</th>
             <th>Description</th>
-            <th>Price/24h</th>
+            <th>Rental fee 24h</th>
         
             <th>5 Star Rating</th>
           </tr>
@@ -36,17 +36,17 @@
         <tbody>
             <tr *ngFor='let animal of filteredAnimals'>
                 <td>
-                    <img *ngIf='showImage'
+                    <img *ngIf='showImages'
                     [src]='animal.imageUrl'
                     [title]='animal.animalName'
                     [style.width.px]='imageWidth'
                     [style.margin.px]='imageMargin'>
                 </td>
-                <td>{{animal.category}}</td>
                 <td>
                     <a [routerLink]="['/animals', animal.animalId]">
                          {{animal.animalName}}</a>
                 </td>
+                <td>{{animal.category}}</td>
                 <td>{{animal.description}}</td>
                 <td>{{animal.price | currency:"SEK":"symbol":"1.2-2" }}</td>
                 <td>
