@@ -1,4 +1,10 @@
 {
   "files.autoSave": "afterDelay",
-  "html.format.wrapAttributes": "force-aligned"
+  "html.format.wrapAttributes": "force-aligned",
+  "workbench.colorCustomizations": {
+    "terminal.foreground": "#FF890C",
+    "activityBar.background": "#2B3016",
+    "titleBar.activeBackground": "#3C431F",
+    "titleBar.activeForeground": "#FAFBF6"
+  }
 }
