@@ -29,10 +29,6 @@ import { StarComponent } from './shared/star.component';
       { path: '', redirectTo: 'landing', pathMatch: 'full'},
       { path: '**', redirectTo: 'landing', pathMatch: 'full'},
 
-
-      
-
-
     ])
   ],
   bootstrap: [AppComponent] // STARTUP COMPONENT
