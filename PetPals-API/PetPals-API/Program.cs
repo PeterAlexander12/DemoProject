@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using PetPals_API.Data;
 using PetPals_API.Repository;
 
 var ClientOrigin = "_clientOrigin";
@@ -5,6 +7,10 @@ var ClientOrigin = "_clientOrigin";
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddDbContext<PetPalsContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddCors(options =>
 {
