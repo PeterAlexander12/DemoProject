@@ -9,6 +9,8 @@ import { AnimalListComponent } from './animals/animal-list.component';
 import { AppComponent } from './app.component';
 import { LandingComponent } from './home/landing.component';
 import { StarComponent } from './shared/star.component';
+import { AuthComponent } from './auth/auth.component';
+import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
   declarations: [ // COMPONENTS BELONGING TO THIS MODULE
@@ -16,20 +18,15 @@ import { StarComponent } from './shared/star.component';
     AnimalListComponent,
     StarComponent,
     AnimalDetailComponent,
-    LandingComponent
+    LandingComponent,
+    AuthComponent
   ],
   imports: [  // THE MODULES TO IMPORT TO THIS MODULE
     BrowserModule, // Exposes NgIf, NgFor
     FormsModule,   // Enables [(ngModel)]
     HttpClientModule,
-    RouterModule.forRoot([
-      { path: 'animals', component: AnimalListComponent},
-      { path: 'animals/:id', component: AnimalDetailComponent},
-      { path: 'landing', component: LandingComponent},
-      { path: '', redirectTo: 'landing', pathMatch: 'full'},
-      { path: '**', redirectTo: 'landing', pathMatch: 'full'},
-
-    ])
+    
+    AppRoutingModule
   ],
   bootstrap: [AppComponent] // STARTUP COMPONENT
 })
