@@ -1,4 +1,5 @@
 import { Component } from "@angular/core";
+import { SignalrService } from "./signalr.service";
 
 @Component({
   selector: 'pp-root',   // pp-prefix for PetPals
@@ -18,4 +19,25 @@ import { Component } from "@angular/core";
 })
 export class AppComponent{
   pageTitle: string = 'PetPals';
+
+
+  constructor(public signalRService: SignalrService){}
+
+  ngOnInit(): void {
+    this.signalRService.startConnection();
+
+    // Wait to make sure connection has time to start
+    
+    setTimeout(() => {
+      this.signalRService.askServerListener();
+      this.signalRService.askServer();
+    }, 2000);  
+  }
+
+  // askServerResponse is listener
+  ngOnDestroy(): void {
+      this.signalRService.hubConnection?.off("askServerResponse");
+  }
+
+
 }

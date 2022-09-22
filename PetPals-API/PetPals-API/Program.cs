@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using PetPals_API.Data;
+using PetPals_API.HubConfig;
 using PetPals_API.Repository;
 
 var ClientOrigin = "_clientOrigin";
@@ -22,7 +23,10 @@ builder.Services.AddCors(options =>
 
         });
 });
-
+builder.Services.AddSignalR(options =>
+{
+    options.EnableDetailedErrors = true;
+});
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -45,7 +49,7 @@ app.UseRouting();
 app.UseCors(ClientOrigin);
 
 app.UseAuthorization();
-
 app.MapControllers();
+app.MapHub<SuperHub>("/HubOne");
 
 app.Run();
