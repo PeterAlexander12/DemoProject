@@ -10,6 +10,8 @@ import { SignalrService } from "./signalr.service";
   <ul class='nav nav-pills'>
     <li><a class='nav-link' routerLink='/landing'>Home</a></li>
     <li><a class='nav-link' routerLink='/animals'>Animal List</a></li>
+    <li><a class='nav-link' routerLink='/auth'>Logga in </a></li>
+
   </ul>
   </nav>
   <div class='container'>
@@ -25,18 +27,10 @@ export class AppComponent{
 
   ngOnInit(): void {
     this.signalRService.startConnection();
-
-    // Wait to make sure connection has time to start
-    
-    setTimeout(() => {
-      this.signalRService.askServerListener();
-      this.signalRService.askServer();
-    }, 2000);  
   }
 
-  // askServerResponse is listener
   ngOnDestroy(): void {
-      this.signalRService.hubConnection?.off("askServerResponse");
+      this.signalRService.hubConnection?.off("serverTestListener");
   }
 
 

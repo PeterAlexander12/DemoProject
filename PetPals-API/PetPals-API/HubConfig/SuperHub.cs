@@ -49,25 +49,37 @@ public class SuperHub : Hub
         }
     }
 
-    public async Task askServer(string textFromClient)
+    public async Task ServerTest(string textFromClient) 
     {
-        var tempString = textFromClient == "hey" ? "message was 'hey'" 
-            : "message was something else";
-
+        
+        var reply = "Hello from Server!";
+        
         /*
          * every client gets a unique connectionId
          */
 
-        // Send to one client:
+        /*
+         *  Send to one client:
+         */
+
         await Clients.Client(Context.ConnectionId)
-            .SendAsync("askServerResponse", tempString);
+            .SendAsync("ServerTestRepeat", textFromClient);
 
-        // Send to multiple, with different connectionIds:
-        await Clients.Clients(Context.ConnectionId, Context.ConnectionId)
-            .SendAsync("askServerResponse", tempString);
+        await Clients.Client(Context.ConnectionId)
+            .SendAsync("ServerTestResponse", reply);
 
-        // Send to all clients:
-        await Clients.All.SendAsync("askServerResponse", tempString);
+        /*
+         *  Send to multiple, with different connectionIds:
+         */
+
+        //await Clients.Clients(Context.ConnectionId, Context.ConnectionId)
+        //    .SendAsync("ServerTestResponse", tempString);
+
+        /*
+         *  Send to all clients:
+         */
+
+        //await Clients.All.SendAsync("ServerTestResponse", tempString);
     }
 
 }

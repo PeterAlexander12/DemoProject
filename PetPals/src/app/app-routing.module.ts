@@ -12,6 +12,7 @@ const routes: Routes = [
       { path: 'landing', component: LandingComponent},
       { path: 'auth', component: AuthComponent},
       { path: '', redirectTo: 'landing', pathMatch: 'full'},
+      { path: 'home', loadChildren: () => import('./home/home.module').then(m => m.HomeModule) },
       { path: '**', redirectTo: 'landing', pathMatch: 'full'}
 ]
 
