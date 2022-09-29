@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import * as signalR from '@aspnet/signalr';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({  providedIn: 'root'})
 export class SignalrService {
@@ -11,7 +12,15 @@ export class SignalrService {
   // KOPPLINGEN TILL BACKEND
   hubConnection?:signalR.HubConnection;
 
-  personName: string | undefined;
+  connectionStarted = false;
+
+  userName: string | undefined;
+
+  ////////////////////////////////////////////////////////////////////
+  ssSubj = new Subject<any>();
+  ssObs(): Observable<any> {
+    return this.ssSubj.asObservable();
+  }
 
 
   // CALL THIS FIRST, FROM APP COMPONENT
@@ -24,10 +33,10 @@ export class SignalrService {
       this.hubConnection
       .start()
       .then(() => {
-          this.serverTestListener();
-          this.serverTest();
-        
-      }).catch(err => console.log('Error while starting connection: ' + err))
+          this.connectionStarted = true;
+          this.ssSubj.next({type: "HubConnStarted"});
+        }).catch(err => console.log('Error while starting connection: ' + err))
+        console.log('startConnectionEnd');
   }
 
 
@@ -45,9 +54,7 @@ export class SignalrService {
 
   // LISTENING FOR RESPONSE FROM SERVER
    /** Registers a handler that will be invoked when the hub method with the specified method name is invoked.
-     * @param {string} methodName The name of the hub method to define.
-     * @param {Function} newMethod The handler that will be raised when the hub method is invoked.
-     */
+   **/
   serverTestListener() {
     console.log("serverTestListener called")
 

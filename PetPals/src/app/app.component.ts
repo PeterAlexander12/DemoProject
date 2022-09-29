@@ -1,4 +1,5 @@
-import { Component } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { AuthService } from "./auth/auth.service";
 import { SignalrService } from "./signalr.service";
 
 @Component({
@@ -19,14 +20,23 @@ import { SignalrService } from "./signalr.service";
   </div>
   `
 })
-export class AppComponent{
+export class AppComponent implements OnInit, OnDestroy {
   pageTitle: string = 'PetPals';
 
 
-  constructor(public signalRService: SignalrService){}
+  constructor(
+    public signalRService: SignalrService, 
+    public authService: AuthService){}
 
   ngOnInit(): void {
     this.signalRService.startConnection();
+
+    // Wait to make sure connection has time to start
+    
+    // // setTimeout(() => {
+    // //   this.signalRService.serverTestListener();
+    // //   this.signalRService.serverTest();
+    // // }, 2000);  
   }
 
   ngOnDestroy(): void {

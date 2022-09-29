@@ -15,6 +15,39 @@ public class SuperHub : Hub
         _context = context;
     }
 
+    public async Task reauthMe(Guid personId)
+    {
+        string currSignalrID = Context.ConnectionId;
+        Person tempPerson = _context.Person.SingleOrDefault(p => p.Id == personId);
+
+        if (tempPerson != null) //if credentials are correct
+        {
+            Console.WriteLine("\n" + tempPerson.UserName + " logged in" + "\nSignalrID: " + currSignalrID);
+
+            Connection currUser = new Connection
+            {
+                Id = Guid.NewGuid(),
+                PersonId = tempPerson.Id,
+                SignalRid = currSignalrID,
+                TimeStamp = DateTime.Now
+            };
+
+            await _context.Connection.AddAsync(currUser);
+            
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+
+            await Clients.Caller.SendAsync("reauthMeResponse", tempPerson.Id, tempPerson.UserName);
+        }
+    } 
 
     public async Task AuthMe(LoginDTO login)
     {
@@ -40,7 +73,7 @@ public class SuperHub : Hub
             await _context.Connection.AddAsync(currUser);
             try { await _context.SaveChangesAsync(); }
             catch (Exception e) { Console.WriteLine(e); throw; }
-            await Clients.Caller.SendAsync("authMeResponseSuccess", tempPerson);
+            await Clients.Caller.SendAsync("authMeResponseSuccess", tempPerson.Id);
         }
 
         else //if credentials are incorrect
