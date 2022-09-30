@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { SignalrService } from '../signalr.service';
+import { SignalrService, User } from '../signalr.service';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +9,7 @@ export class AuthService {
   constructor(public signalrService: SignalrService, public router: Router) {
     let tempPersonId = localStorage.getItem('personId');
     if (tempPersonId) {
-      if (this.signalrService.hubConnection?.on) {
+      if (this.signalrService.hubConnection?.state == 1) {
         //if already connected
         this.reauthMeListener();
         this.reauthMe(tempPersonId);
@@ -41,10 +41,13 @@ export class AuthService {
 
   // WHEN HUB REPLIES with userId, STORE ID IN LOCALSTORAGE
   public authMeListenerSuccess() {
-    this.signalrService.hubConnection?.on('authMeResponseSuccess',
-      (id: any) => {
-        console.log(`User Id: ${id}`);
-        localStorage.setItem("personId", id)
+    this.signalrService.hubConnection?.on('authMeResponseSuccess',(user: User) => {
+        console.log(`user "${user.name}" logged in`);
+        console.log(`user id: ${user.id}`);
+
+        this.signalrService.userData = {...user};
+
+        localStorage.setItem("personId", JSON.stringify(user.id) )
         this.isAuthenticated = true;
         this.signalrService.toastr.success('Inloggning lyckades');
         this.signalrService.router.navigateByUrl('/landing');
@@ -59,19 +62,16 @@ export class AuthService {
   }
 
   async reauthMe(personId: string) {
-    await this.signalrService.hubConnection?.invoke('reauthMe', personId)
+    await this.signalrService.hubConnection?.invoke('ReauthMe', personId)
       .then(() => this.signalrService.toastr.info('Verifierar inloggning...'))
       .catch((err) => console.error(err));
   }
 
   reauthMeListener() {
-    this.signalrService.hubConnection?.on(
-      'reauthMeResponse',
-      (personId: string, userName: string) => {
-        console.log(`User Id: ${personId}`);
-        console.log(`userName: ${userName}`);
-
-        this.signalrService.userName = userName;
+    this.signalrService.hubConnection?.on('reauthMeResponse',
+      (user: User) => {
+        console.log(user);
+        this.signalrService.userData = {...user};
         this.isAuthenticated = true;
         this.signalrService.toastr.success('Du är inloggad');
         if (this.signalrService.router.url == '/auth')

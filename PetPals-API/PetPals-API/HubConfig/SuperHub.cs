@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using PetPals_API.Data;
 using PetPals_API.DTO;
+using  PetPals_API.Helpers;
+using PetPals_API.HubModels;
 using PetPals_API.Models;
 
 namespace PetPals_API.HubConfig;
 
-public class SuperHub : Hub
+public partial class SuperHub : Hub
 {
     readonly PetPalsContext _context;
 
@@ -15,10 +18,49 @@ public class SuperHub : Hub
         _context = context;
     }
 
-    public async Task reauthMe(Guid personId)
+    public override Task OnDisconnectedAsync(Exception? exception)
     {
-        string currSignalrID = Context.ConnectionId;
-        Person tempPerson = _context.Person.SingleOrDefault(p => p.Id == personId);
+        Guid currUserId = _context.Connection
+            .Where(c => c.SignalRid == Context.ConnectionId)
+            .Select(c => c.PersonId)
+            .FirstOrDefault();
+
+        // Remove all connections with this user
+        _context.Connection.RemoveRange(_context.Connection
+            .Where(p => p.PersonId == currUserId).ToList());
+
+        try
+        {
+            _context.SaveChanges();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+
+        Clients.Others.SendAsync("userOff", currUserId);
+
+        return base.OnDisconnectedAsync(exception);
+    }
+
+    public async Task ReauthMe(string? userId)
+    {
+        var personId = ConvertStringToGuid(userId);
+        var currSignalrID = Context.ConnectionId;
+        Person? tempPerson;
+
+        try
+        {
+            tempPerson = _context.Person.SingleOrDefault(p => p.Id == personId);
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+
 
         if (tempPerson != null) //if credentials are correct
         {
@@ -73,7 +115,12 @@ public class SuperHub : Hub
             await _context.Connection.AddAsync(currUser);
             try { await _context.SaveChangesAsync(); }
             catch (Exception e) { Console.WriteLine(e); throw; }
-            await Clients.Caller.SendAsync("authMeResponseSuccess", tempPerson.Id);
+
+            var newUser = new User(tempPerson.Id, tempPerson.UserName,
+                currentSignalrId);
+            await Clients.Caller.SendAsync("authMeResponseSuccess", newUser);
+            await Clients.Others.SendAsync("userOn", newUser);
+
         }
 
         else //if credentials are incorrect
@@ -115,4 +162,27 @@ public class SuperHub : Hub
         //await Clients.All.SendAsync("ServerTestResponse", tempString);
     }
 
+    public void LogOut(string? userId)
+    {
+        if (userId != null)
+        {
+            var personId = ConvertStringToGuid(userId);
+            _context.Connection.RemoveRange(_context.Connection
+                .Where(p => p.PersonId == personId).ToList());
+
+            _context.SaveChanges();
+            Clients.Caller.SendAsync("logoutResponse");
+            Clients.Others.SendAsync("userOff", personId);
+        }
+        else
+            throw new ArgumentNullException(userId);
+    }
+
+    public Guid ConvertStringToGuid(string? input)
+    {
+        var pattern = @"(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}";
+        var rg = new Regex(pattern);
+        var guid = rg.Match(input);
+        return Guid.Parse(guid.Value);
+    }
 }

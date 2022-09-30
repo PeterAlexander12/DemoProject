@@ -9,7 +9,7 @@ import { SignalrService } from "./signalr.service";
   <nav class='navbar navbar-expand navbar-light bg-light'>
   <a class=''navbar brand >{{pageTitle | uppercase}}</a>
   <ul class='nav nav-pills'>
-    <li><a class='nav-link' routerLink='/landing'>Home</a></li>
+    <li><a class='nav-link' routerLink='/home'>Chat</a></li>
     <li><a class='nav-link' routerLink='/animals'>Animal List</a></li>
     <li><a class='nav-link' routerLink='/auth'>Logga in </a></li>
 

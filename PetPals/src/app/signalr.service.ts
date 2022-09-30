@@ -4,6 +4,12 @@ import { ToastrService } from 'ngx-toastr';
 import * as signalR from '@aspnet/signalr';
 import { Observable, Subject } from 'rxjs';
 
+export class User {
+  public id: string | undefined;
+  public name: string | undefined;
+  public signalrId: string | undefined;
+}
+
 @Injectable({  providedIn: 'root'})
 export class SignalrService {
 
@@ -14,7 +20,7 @@ export class SignalrService {
 
   connectionStarted = false;
 
-  userName: string | undefined;
+  userData: User | undefined;
 
   ////////////////////////////////////////////////////////////////////
   ssSubj = new Subject<any>();
@@ -36,7 +42,7 @@ export class SignalrService {
           this.connectionStarted = true;
           this.ssSubj.next({type: "HubConnStarted"});
         }).catch(err => console.log('Error while starting connection: ' + err))
-        console.log('startConnectionEnd');
+        console.log('startConnection');
   }
 
 
