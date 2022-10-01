@@ -60,7 +60,6 @@ export class HomeComponent implements OnInit {
    
    userOnListener(): void {
      this.signalrService.hubConnection?.on("userOn", (newUser: User) => {
-       console.log(newUser);
        this.users.push(newUser);
      });
    }

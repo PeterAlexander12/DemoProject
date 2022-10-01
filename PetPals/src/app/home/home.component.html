@@ -1,4 +1,6 @@
-<div class="container-fluid">
+<div class="container-fluid" padding:30px>
+  <br>
+  <br>
     <div class="row">
       <div class="col-6 pl-4">
         Inloggad som 
@@ -7,32 +9,24 @@
         </b> 
       </div>
       <div class="col-6 text-right" style="cursor: pointer;" (click)="logOut()">
-        <!-- <a routerLink="animals"> -->
             <button class="btn-close-white" > Logga Ut </button>
-        <!-- </a>  -->
       </div>
     </div>
   
     <br>
-    <ul class="list-group" *ngFor="let user of users">
-      <li class="list-group-item">{{ user.name }}</li>
-    </ul>
+
   </div>
 
 
-  <!-- 5Tutorial  -->
   <div class="row">
-    <!-- List of Users -->
     <div class="col-12 col-sm-3 offset-sm-3 mt-4">
-      <!-- Online Users -->
-      <label>Online Users</label>
+      <label><b>Användare Online</b></label>
       <ul class="list-group" *ngFor="let user of users">
         <li class="list-group-item" style="cursor: pointer;" 
         (click)="messageRecipient = user">{{ user.name }}</li>
       </ul>
     </div>
 
-    <!-- Chat Box -->
     <div class="col-12 col-sm-3 mt-4">
       <label><b>{{ messageRecipient.name }}</b></label>
       <div id="chatBox">
