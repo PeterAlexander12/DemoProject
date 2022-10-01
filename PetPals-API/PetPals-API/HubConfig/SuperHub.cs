@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using PetPals_API.Data;
 using PetPals_API.DTO;
-using  PetPals_API.Helpers;
 using PetPals_API.HubModels;
 using PetPals_API.Models;
 
@@ -53,20 +52,16 @@ public partial class SuperHub : Hub
         try
         {
             tempPerson = _context.Person.SingleOrDefault(p => p.Id == personId);
-
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            Console.WriteLine(e); throw;
         }
-
 
         if (tempPerson != null) //if credentials are correct
         {
-            Console.WriteLine("\n" + tempPerson.UserName + " logged in" + "\nSignalrID: " + currSignalrID);
 
-            Connection currUser = new Connection
+            var currUser = new Connection
             {
                 Id = Guid.NewGuid(),
                 PersonId = tempPerson.Id,
@@ -86,8 +81,12 @@ public partial class SuperHub : Hub
                 throw;
             }
 
+            var newUser = new User(tempPerson.Id, tempPerson.UserName,
+                currSignalrID);
 
-            await Clients.Caller.SendAsync("reauthMeResponse", tempPerson.Id, tempPerson.UserName);
+            await Clients.Caller.SendAsync("reauthMeResponse", newUser);
+            await Clients.Others.SendAsync("userOn", newUser);
+
         }
     } 
 

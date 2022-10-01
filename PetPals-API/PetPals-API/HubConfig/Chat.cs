@@ -1,14 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using PetPals_API.HubModels;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-
 namespace PetPals_API.HubConfig;
 
 public partial class SuperHub
@@ -33,8 +25,12 @@ public partial class SuperHub
         
         await Clients.Caller.SendAsync
             ("getOnlineUsersResponse", onlineUsers);
-
-
-
     }
+
+    public async Task SendMessage(string connId, string msg)
+    {
+        await Clients.Client(connId)
+            .SendAsync("sendMessageResponse", Context.ConnectionId, msg);
+    }
+
 }

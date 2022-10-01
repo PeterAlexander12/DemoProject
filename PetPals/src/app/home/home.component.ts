@@ -5,7 +5,7 @@ import {Router} from "@angular/router"
 @Component({
   selector: 'pm-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
 
@@ -87,15 +87,15 @@ export class HomeComponent implements OnInit {
     if (this.message?.trim() === "" || this.message == null) return;
 
     console.log(`messageRecipient:  ${this.messageRecipient}`);
-    console.log(`messageRecipient.name:  ${this.messageRecipient.name}`);
-    console.log(`messageRecipient.signalrId:  ${this.messageRecipient.signalrId}`);
+    console.log(`messageRecipient.name:  ${this.messageRecipient?.name}`);
+    console.log(`messageRecipient.signalrId:  ${this.messageRecipient?.signalrId}`);
 
 
     this.signalrService.hubConnection?.invoke("sendMessage", this.messageRecipient?.signalrId, this.message)
     .catch(err => console.error(err));
 
-    if (this.messageRecipient.messages == null) this.messageRecipient.messages = [];
-    this.messageRecipient.messages.push(new Message(this.message, true));
+    if (this.messageRecipient?.messages == null) this.messageRecipient.messages = [];
+    this.messageRecipient?.messages.push(new Message(this.message, true));
     this.message = "";
   }
 

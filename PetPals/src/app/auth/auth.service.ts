@@ -75,8 +75,9 @@ export class AuthService {
   reauthMeListener() {
     this.signalrService.hubConnection?.on('reauthMeResponse',
       (user: User) => {
-        console.log(user);
+        console.log(`user: ${user} `);
         this.signalrService.userData = {...user};
+        console.log(`signalrService.userData.name: ${this.signalrService.userData.name} `);
         this.isAuthenticated = true;
         this.signalrService.toastr.success('Du är inloggad');
         if (this.signalrService.router.url == '/auth')
