@@ -101,26 +101,35 @@ public partial class SuperHub : Hub
 
         if (tempPerson != null) //if credentials are correct
         {
-            Console.WriteLine("\n" + tempPerson.UserName + " logged in" 
-                              + "\nSignalrID: " + currentSignalrId);
 
-            var currUser = new Connection
+            if (await UserIsLoggedIn(currentSignalrId, tempPerson.UserName))
             {
-                Id = Guid.NewGuid(),
-                PersonId = tempPerson.Id,
-                SignalRid = currentSignalrId,
-                TimeStamp = DateTime.Now
-            };
+                await Clients.Caller.SendAsync("userAlreadyLoggedIn");
+                return;
+            }
+            else
+            {
+                var currUser = new Connection
+                {
+                    Id = Guid.NewGuid(),
+                    PersonId = tempPerson.Id,
+                    SignalRid = currentSignalrId,
+                    TimeStamp = DateTime.Now
+                };
 
-            await _context.Connection.AddAsync(currUser);
-            try { await _context.SaveChangesAsync(); }
-            catch (Exception e) { Console.WriteLine(e); throw; }
+                await _context.Connection.AddAsync(currUser);
+                try { await _context.SaveChangesAsync(); }
+                catch (Exception e) { Console.WriteLine(e); throw; }
 
-            var newUser = new User(tempPerson.Id, tempPerson.UserName,
-                currentSignalrId);
-            await Clients.Caller.SendAsync("authMeResponseSuccess", newUser);
-            await Clients.Others.SendAsync("userOn", newUser);
+                var newUser = new User(tempPerson.Id, tempPerson.UserName,
+                    currentSignalrId);
+                await Clients.Caller.SendAsync("authMeResponseSuccess", newUser);
+                await Clients.Others.SendAsync("userOn", newUser);
 
+            }
+
+            
+            
         }
 
         else //if credentials are incorrect
@@ -181,6 +190,17 @@ public partial class SuperHub : Hub
             return;
         }
             
+    }
+
+    public async Task<bool> UserIsLoggedIn(string signalrId, string? userName)
+    {
+        var tempPerson = _context.Person
+            .SingleOrDefault(p => p.UserName == userName);
+
+        var isLoggedIn = await _context.Connection
+            .AnyAsync(c => tempPerson != null && c.PersonId == tempPerson.Id);
+        
+        return isLoggedIn;
     }
 
     public Guid ConvertStringToGuid(string? input)

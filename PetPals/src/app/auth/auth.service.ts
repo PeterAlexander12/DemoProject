@@ -56,6 +56,11 @@ export class AuthService {
   }
 
   public authMeListenerFail() {
+    this.signalrService.hubConnection?.on('userAlreadyLoggedIn', () => {
+      this.signalrService.toastr.error('Du är redan inloggad!');
+    });
+  }
+  public authMeListenerDoubleLogIn() {
     this.signalrService.hubConnection?.on('authMeResponseFail', () => {
       this.signalrService.toastr.error('Inloggning misslyckades');
     });
