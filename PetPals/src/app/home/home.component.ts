@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SignalrService, User } from '../signalr.service';
+import { Message, SignalrService, User } from '../signalr.service';
 import {Router} from "@angular/router"
 
 @Component({
@@ -14,13 +14,16 @@ export class HomeComponent implements OnInit {
 
    
    users: Array<User> = new Array<User>();
+   messageRecipient: User = new User; 
+   message: string | undefined;
 
    ngOnInit(): void {
      this.userOnListener();
      this.userOffListener();
      this.logOutListener();
      this.getOnlineUsersListener();
- 
+     this.sendMessageListener();
+
      //hubConnection.state is 1 when hub connection is connected.
      if (this.signalrService.hubConnection?.state == 1) this.getOnlineUsersInvoke();
      else {
@@ -79,4 +82,30 @@ export class HomeComponent implements OnInit {
        this.users = [...onlineUsers];
      });
    }
+
+   sendMessageInvoke(): void {
+    if (this.message?.trim() === "" || this.message == null) return;
+
+    console.log(`messageRecipient:  ${this.messageRecipient}`);
+    console.log(`messageRecipient.name:  ${this.messageRecipient.name}`);
+    console.log(`messageRecipient.signalrId:  ${this.messageRecipient.signalrId}`);
+
+
+    this.signalrService.hubConnection?.invoke("sendMessage", this.messageRecipient?.signalrId, this.message)
+    .catch(err => console.error(err));
+
+    if (this.messageRecipient.messages == null) this.messageRecipient.messages = [];
+    this.messageRecipient.messages.push(new Message(this.message, true));
+    this.message = "";
+  }
+
+  private sendMessageListener(): void {
+    this.signalrService.hubConnection?.on("sendMessageResponse", (signalrId: string, message: string) => {
+      let receiver = this.users.find(u => u.signalrId === signalrId);
+      if (receiver!.messages == null) receiver!.messages = [];
+      receiver?.messages.push(new Message(message, false));
+    });
+  }
 }
+
+

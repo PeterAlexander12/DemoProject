@@ -8,6 +8,14 @@ export class User {
   public id: string | undefined;
   public name: string | undefined;
   public signalrId: string | undefined;
+  public messages: Array<Message> | undefined;
+}
+
+export class Message {
+  constructor(
+    public content: string, 
+    public fromMe: boolean
+  ){}
 }
 
 @Injectable({  providedIn: 'root'})

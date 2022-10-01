@@ -175,7 +175,12 @@ public partial class SuperHub : Hub
             Clients.Others.SendAsync("userOff", personId);
         }
         else
-            throw new ArgumentNullException(userId);
+        {
+            Console.WriteLine("Already logged out");
+            //throw new ArgumentNullException(userId);
+            return;
+        }
+            
     }
 
     public Guid ConvertStringToGuid(string? input)

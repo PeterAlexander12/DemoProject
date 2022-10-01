@@ -50,7 +50,7 @@ export class AuthService {
         localStorage.setItem("personId", JSON.stringify(user.id) )
         this.isAuthenticated = true;
         this.signalrService.toastr.success('Inloggning lyckades');
-        this.signalrService.router.navigateByUrl('/landing');
+        this.signalrService.router.navigateByUrl('/home');
       }
     );
   }
