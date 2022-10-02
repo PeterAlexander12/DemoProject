@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Message, SignalrService, User } from '../signalr.service';
 import {Router} from "@angular/router"
+import { AuthGuard } from '../auth/auth.guard';
 
 @Component({
   selector: 'pm-home',
