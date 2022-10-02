@@ -2,7 +2,6 @@
 
 public class ResponseAlternatives
 {
-
     Random rnd = new();
 
     public string GenerateRandomResponse()
@@ -19,6 +18,5 @@ public class ResponseAlternatives
         };
 
         return tempString;
-
     }
 }

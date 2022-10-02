@@ -1,33 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using PetPals_API.ViewModels;
+﻿using PetPals_API.ViewModels;
 
 namespace PetPals_API.Repository;
 
 public class AnimalRepository
 {
-    public AnimalRepository()
-    {
-    }
-
     public IEnumerable<AnimalVm> GetAllAnimals()
     {
         var animal1 = new AnimalVm
-            {
-                AnimalId = 1,
-                AnimalName = "Anna",
-                Price = 240,
-                StarRating = 4.3,
-                Description = "This is a short description. " +
-                              "Lorem ipsum dolor sit amet, " +
-                              "consectetur adipiscing elit.",
-                Category = "Dog",
-                ImageUrl = "./assets/images/AnnaDog.jpg"
-            };
+        {
+            AnimalId = 1,
+            AnimalName = "Anna",
+            Price = 240,
+            StarRating = 4.3,
+            Description = "This is a short description. " +
+                          "Lorem ipsum dolor sit amet, " +
+                          "consectetur adipiscing elit.",
+            Category = "Dog",
+            ImageUrl = "./assets/images/AnnaDog.jpg"
+        };
         var animal2 = new AnimalVm
         {
             AnimalId = 2,
@@ -76,10 +66,14 @@ public class AnimalRepository
             Category = "Turtle",
             ImageUrl = "./assets/images/EmmaTurtle.jpg"
         };
-        
+
         var animals = new List<AnimalVm>
         {
-            animal1, animal2, animal3, animal4, animal5
+            animal1,
+            animal2,
+            animal3,
+            animal4,
+            animal5
         };
 
         return animals;
@@ -89,6 +83,5 @@ public class AnimalRepository
     {
         var animals = GetAllAnimals();
         return animals.FirstOrDefault(a => a.AnimalId == id);
-
     }
 }

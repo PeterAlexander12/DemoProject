@@ -15,12 +15,11 @@ builder.Services.AddDbContext<PetPalsContext>(options =>
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: ClientOrigin,
-        policy  =>
+    options.AddPolicy(ClientOrigin,
+        policy =>
         {
             policy.WithOrigins("http://localhost:4200",
                 "http://localhost:58018");
-
         });
 });
 builder.Services.AddSignalR(options =>

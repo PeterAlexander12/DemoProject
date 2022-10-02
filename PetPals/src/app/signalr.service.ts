@@ -67,7 +67,8 @@ export class SignalrService {
   }
 
   // LISTENING FOR RESPONSE FROM SERVER
-   /** Registers a handler that will be invoked when the hub method with the specified method name is invoked.
+   /** Registers a handler that will be invoked when the hub method 
+    * with the specified method name is invoked.
    **/
   serverTestListener() {
     console.log("serverTestListener called")

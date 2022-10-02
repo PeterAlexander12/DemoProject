@@ -78,7 +78,6 @@ export class HomeComponent implements OnInit {
    }
  
  
- 
    getOnlineUsersInvoke(): void {
      this.signalrService.hubConnection?.invoke("getOnlineUsers")
      .catch(err => console.error(err));

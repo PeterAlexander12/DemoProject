@@ -19,14 +19,15 @@ public partial class SuperHub : Hub
 
     public override Task OnDisconnectedAsync(Exception? exception)
     {
-        Guid currUserId = _context.Connection
+        var currUserId = _context.Connection
             .Where(c => c.SignalRid == Context.ConnectionId)
             .Select(c => c.PersonId)
             .FirstOrDefault();
 
         // Remove all connections with this user
         _context.Connection.RemoveRange(_context.Connection
-            .Where(p => p.PersonId == currUserId).ToList());
+            .Where(p => p.PersonId == currUserId)
+            .ToList());
 
         try
         {
@@ -55,12 +56,12 @@ public partial class SuperHub : Hub
         }
         catch (Exception e)
         {
-            Console.WriteLine(e); throw;
+            Console.WriteLine(e);
+            throw;
         }
 
         if (tempPerson != null) //if credentials are correct
         {
-
             var currUser = new Connection
             {
                 Id = Guid.NewGuid(),
@@ -70,7 +71,7 @@ public partial class SuperHub : Hub
             };
 
             await _context.Connection.AddAsync(currUser);
-            
+
             try
             {
                 await _context.SaveChangesAsync();
@@ -86,62 +87,57 @@ public partial class SuperHub : Hub
 
             await Clients.Caller.SendAsync("reauthMeResponse", newUser);
             await Clients.Others.SendAsync("userOn", newUser);
-
         }
-    } 
+    }
 
     public async Task AuthMe(LoginDTO login)
     {
         var currentSignalrId = Context.ConnectionId;
 
-        var tempPerson = _context.Person
-            .SingleOrDefault(p => p.UserName == login.UserName 
-                                  && p.Password == login.PassWord);
+        var tempPerson = _context.Person.SingleOrDefault(p =>
+            p.UserName == login.UserName && p.Password == login.PassWord);
 
         if (tempPerson != null) //if credentials are correct
         {
-
             if (await UserIsLoggedIn(currentSignalrId, tempPerson.UserName))
             {
                 await Clients.Caller.SendAsync("userAlreadyLoggedIn");
                 return;
             }
-            else
+
+            var currUser = new Connection
             {
-                var currUser = new Connection
-                {
-                    Id = Guid.NewGuid(),
-                    PersonId = tempPerson.Id,
-                    SignalRid = currentSignalrId,
-                    TimeStamp = DateTime.Now
-                };
+                Id = Guid.NewGuid(),
+                PersonId = tempPerson.Id,
+                SignalRid = currentSignalrId,
+                TimeStamp = DateTime.Now
+            };
 
-                await _context.Connection.AddAsync(currUser);
-                try { await _context.SaveChangesAsync(); }
-                catch (Exception e) { Console.WriteLine(e); throw; }
-
-                var newUser = new User(tempPerson.Id, tempPerson.UserName,
-                    currentSignalrId);
-                await Clients.Caller.SendAsync("authMeResponseSuccess", newUser);
-                await Clients.Others.SendAsync("userOn", newUser);
-
+            await _context.Connection.AddAsync(currUser);
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
             }
 
-            
-            
+            var newUser = new User(tempPerson.Id, tempPerson.UserName,
+                currentSignalrId);
+            await Clients.Caller.SendAsync("authMeResponseSuccess", newUser);
+            await Clients.Others.SendAsync("userOn", newUser);
         }
 
         else //if credentials are incorrect
-        {
             await Clients.Caller.SendAsync("authMeResponseFail");
-        }
     }
 
-    public async Task ServerTest(string textFromClient) 
+    public async Task ServerTest(string textFromClient)
     {
-        
         var reply = "Hello from Server!";
-        
+
         /*
          * every client gets a unique connectionId
          */
@@ -176,9 +172,8 @@ public partial class SuperHub : Hub
         {
             var personId = ConvertStringToGuid(userId);
             _context.Connection.RemoveRange(_context.Connection
-                .Where(p => p.PersonId == personId).ToList());
-
-            string personName = "Bertil";
+                .Where(p => p.PersonId == personId)
+                .ToList());
 
             _context.SaveChanges();
             Clients.Caller.SendAsync("logoutResponse");
@@ -188,25 +183,24 @@ public partial class SuperHub : Hub
         {
             Console.WriteLine("Already logged out");
             //throw new ArgumentNullException(userId);
-            return;
         }
-            
     }
 
     public async Task<bool> UserIsLoggedIn(string signalrId, string? userName)
     {
-        var tempPerson = _context.Person
-            .SingleOrDefault(p => p.UserName == userName);
+        var tempPerson =
+            _context.Person.SingleOrDefault(p => p.UserName == userName);
 
-        var isLoggedIn = await _context.Connection
-            .AnyAsync(c => tempPerson != null && c.PersonId == tempPerson.Id);
-        
+        var isLoggedIn = await _context.Connection.AnyAsync(c =>
+            tempPerson != null && c.PersonId == tempPerson.Id);
+
         return isLoggedIn;
     }
 
     public Guid ConvertStringToGuid(string? input)
     {
-        var pattern = @"(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}";
+        var pattern =
+            @"(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}";
         var rg = new Regex(pattern);
         var guid = rg.Match(input);
         return Guid.Parse(guid.Value);
