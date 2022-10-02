@@ -17,6 +17,7 @@ export class HomeComponent implements OnInit {
    users: Array<User> = new Array<User>();
    messageRecipient: User = new User; 
    message: string | undefined;
+   userLoggingOff: User | undefined;
 
    ngOnInit(): void {
      this.userOnListener();
@@ -62,11 +63,17 @@ export class HomeComponent implements OnInit {
    userOnListener(): void {
      this.signalrService.hubConnection?.on("userOn", (newUser: User) => {
        this.users.push(newUser);
+      this.signalrService.toastr.info(` ${newUser.name} Har loggat in!`);
      });
    }
    userOffListener(): void {
      this.signalrService.hubConnection?.on("userOff", (personId: string) => {
+       this.userLoggingOff = this.users.find(u => u.id == personId);
        this.users = this.users.filter(u => u.id != personId);
+
+       if(this.userLoggingOff != null) {
+       this.signalrService.toastr.info(` ${this.userLoggingOff?.name} loggade ut`);
+       }
      });
    }
  

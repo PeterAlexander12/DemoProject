@@ -178,6 +178,8 @@ public partial class SuperHub : Hub
             _context.Connection.RemoveRange(_context.Connection
                 .Where(p => p.PersonId == personId).ToList());
 
+            string personName = "Bertil";
+
             _context.SaveChanges();
             Clients.Caller.SendAsync("logoutResponse");
             Clients.Others.SendAsync("userOff", personId);
