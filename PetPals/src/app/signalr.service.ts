@@ -54,10 +54,6 @@ export class SignalrService {
   }
 
 
-
-  // Three important methods on hubconnection: <.invoke> <.on> <.off>
-
-  // INVOKE: (Scheduling for future execution..)
   async serverTest() {
     console.log("serverTest called");
     let message = "Hello from Client!"
@@ -66,10 +62,6 @@ export class SignalrService {
       .catch(err => console.error(err))
   }
 
-  // LISTENING FOR RESPONSE FROM SERVER
-   /** Registers a handler that will be invoked when the hub method 
-    * with the specified method name is invoked.
-   **/
   serverTestListener() {
     console.log("serverTestListener called")
 
