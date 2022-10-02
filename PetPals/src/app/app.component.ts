@@ -32,11 +32,11 @@ export class AppComponent implements OnInit, OnDestroy {
     this.signalRService.startConnection();
 
     // Wait to make sure connection has time to start
-    
-    // // setTimeout(() => {
-    // //   this.signalRService.serverTestListener();
-    // //   this.signalRService.serverTest();
-    // // }, 2000);  
+  
+    setTimeout(() => {
+      this.signalRService.serverTestListener();
+      this.signalRService.serverTest();
+    }, 2000);  
   }
 
   ngOnDestroy(): void {

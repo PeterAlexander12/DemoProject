@@ -13,7 +13,7 @@ public partial class SuperHub
             .Select(c => c.PersonId)
             .SingleOrDefault();
 
-        var onlineUsers = _context.Connection
+        List<User> onlineUsers = _context.Connection
             .Where(c => c.PersonId != currUserId)
             .Select(c => new User(c.PersonId, _context.Person
                 .Where(p => p.Id == c.PersonId)

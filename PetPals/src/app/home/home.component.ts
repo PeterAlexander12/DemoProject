@@ -37,8 +37,6 @@ export class HomeComponent implements OnInit {
      }
    }
  
- 
-   
    logOut(): void {
     if(localStorage.getItem("personId") != null){
       this.signalrService.hubConnection?.invoke("logOut", this.signalrService.userData?.id)
@@ -56,10 +54,7 @@ export class HomeComponent implements OnInit {
        // this.signalrService.hubConnection.stop();
      });
    }
- 
- 
- 
-   
+
    userOnListener(): void {
      this.signalrService.hubConnection?.on("userOn", (newUser: User) => {
        this.users.push(newUser);
@@ -82,12 +77,22 @@ export class HomeComponent implements OnInit {
      this.signalrService.hubConnection?.invoke("getOnlineUsers")
      .catch(err => console.error(err));
    }
+
+
+
+   
    getOnlineUsersListener(): void {
      this.signalrService.hubConnection?.on("getOnlineUsersResponse", 
      (onlineUsers: Array<User>) => {
        this.users = [...onlineUsers];
      });
    }
+
+
+
+
+
+
 
    sendMessageInvoke(): void {
     if (this.message?.trim() === "" || this.message == null) return;
@@ -108,6 +113,7 @@ export class HomeComponent implements OnInit {
   private sendMessageListener(): void {
     this.signalrService.hubConnection?.on("sendMessageResponse", (signalrId: string, message: string) => {
       let receiver = this.users.find(u => u.signalrId === signalrId);
+
       if (receiver!.messages == null) receiver!.messages = [];
       receiver?.messages.push(new Message(message, false));
     });
